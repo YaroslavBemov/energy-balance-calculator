@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import CssBaseline from '@mui/material/CssBaseline'
-import { Container } from '@mui/material'
-import { SelectChangeEvent } from '@mui/material/Select'
+import { Container, Divider, FormControl, InputLabel, MenuItem } from '@mui/material'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import { ColorModeContext, ThemeButton } from './ThemeButton'
@@ -15,6 +15,8 @@ import MuiAccordionSummary, {
 } from '@mui/material/AccordionSummary'
 import MuiAccordionDetails from '@mui/material/AccordionDetails'
 import Typography from '@mui/material/Typography'
+import TextField from '@mui/material/TextField'
+import InputAdornment from '@mui/material/InputAdornment'
 
 // import './app.css'
 
@@ -56,9 +58,59 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 
 
 function App() {
-  const [sets, setSets] = useState<number>(0)
-  const [experience, setExperience] = useState<string>('1')
+  const [totalWeight, setTotalWeight] = useState<string>('1')
+  const [dryWeight, setDryWeight] = useState<string>('1')
+  const [height, setHeight] = useState<string>('1')
+  const [age, setAge] = useState<string>('1')
+  const [gender, setGender] = useState<string>('0') // 0 - мужской
+  const [lifestyle, setLifestyle] = useState<string>('1')
+  const [metabolismKanningem, setMetabolismKanningem] = useState<string>('0')
+  const [metabolismTenHaaf, setMetabolismTenHaaf] = useState<string>('0')
+  const [metabolismTinsley, setMetabolismTinsley] = useState<string>('0')
+  // const [sets, setSets] = useState<string>('1')
+  const [formula, setFormula] = useState<string>('1')
 
+  const totalWeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const totalWeight = event.target.value
+    setTotalWeight(totalWeight)
+    localStorage.setItem('totalWeight', totalWeight)
+  }
+
+  const dryWeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const dryWeight = event.target.value
+    setDryWeight(dryWeight)
+    localStorage.setItem('dryWeight', dryWeight)
+  }
+
+  const heightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const height = event.target.value
+    setHeight(height)
+    localStorage.setItem('height', height)
+  }
+
+  const ageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const age = event.target.value
+    setAge(age)
+    localStorage.setItem('age', age)
+  }
+
+  const genderChange = (event: SelectChangeEvent) => {
+    const gender = event.target.value
+    setGender(gender)
+    localStorage.setItem('gender', gender)
+  }
+
+  const lifestyleChange = (event: SelectChangeEvent) => {
+    const lifestyle = event.target.value
+    setLifestyle(lifestyle)
+    localStorage.setItem('lifestyle', lifestyle)
+  }
+
+  const formulaChange = (event: SelectChangeEvent) => {
+    const formula = event.target.value
+    setFormula(formula)
+    localStorage.setItem('formula', formula)
+  }
 
   const [mode, setMode] = useState<'light' | 'dark'>('dark')
   const colorMode = useMemo(
@@ -79,28 +131,51 @@ function App() {
     [mode],
   )
 
-  const experienceChange = (event: SelectChangeEvent) => {
-    const experience = event.target.value
-    setExperience(experience)
-    localStorage.setItem('experience', experience)
-  }
 
   useEffect(() => {
-    const experience = localStorage.getItem('experience')
-    if (experience) {
-      setExperience(experience)
+    const totalWeight = localStorage.getItem('totalWeight')
+    if (totalWeight) {
+      setTotalWeight(totalWeight)
+    }
+    const dryWeight = localStorage.getItem('dryWeight')
+    if (dryWeight) {
+      setDryWeight(dryWeight)
+    }
+    const height = localStorage.getItem('height')
+    if (height) {
+      setHeight(height)
+    }
+    const age = localStorage.getItem('age')
+    if (age) {
+      setAge(age)
+    }
+    const gender = localStorage.getItem('gender')
+    if (gender) {
+      setGender(gender)
+    }
+    const lifestyle = localStorage.getItem('lifestyle')
+    if (lifestyle) {
+      setLifestyle(lifestyle)
+    }
+    const formula = localStorage.getItem('formula')
+    if (formula) {
+      setFormula(formula)
     }
   }, [])
 
   useEffect(() => {
-    setSets(Math.round(Math.sqrt(+experience)))
-  }, [experience])
+    setMetabolismKanningem((370 + 21.6 * +dryWeight).toFixed(1) + '')
+    setMetabolismTenHaaf(((49.94 * +totalWeight + 2459.053 * +height - 34.014 * +age + 799.257 * +gender + 122.502) / 4.184).toFixed(1) + '')
+    setMetabolismTinsley((24.8 * +totalWeight + 10).toFixed(1) + '')
+  }, [dryWeight, totalWeight, height, age, gender])
 
-  const [expanded, setExpanded] = useState<string | false>('panel1')
+  const [expanded, setExpanded] = useState<string | false>('panel2')
 
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
       setExpanded(newExpanded ? panel : false)
+      console.log(event.target)
+
     }
 
 
@@ -126,17 +201,137 @@ function App() {
 
             <div>
 
+              {/* Мои параметры */}
+              <Accordion expanded={expanded === 'panel5'} onChange={handleChange('panel5')}>
+                <AccordionSummary aria-controls="panel5d-content" id="panel5d-header">
+                  <Typography>Мои параметры</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography sx={{ mb: 2 }}>
+                    Сперва внеси свои параметры.
+                    Если вы знаете сухую массу тела, тогда достаточно внести общую массу и сухую.
+                  </Typography>
+
+                  {/* Общая масса тела */}
+                  <FormControl variant="outlined" sx={{ m: 1, minWidth: 200 }}>
+                    <TextField
+                      value={totalWeight}
+                      onChange={totalWeightChange}
+                      label="Общая масса тела"
+                      id="outlined-start-adornment"
+                      sx={{ width: '25ch' }}
+                      InputProps={{
+                        endAdornment: <InputAdornment position="end">кг</InputAdornment>,
+                      }}
+                    />
+                  </FormControl>
+
+                  {/* Сухая масса тела */}
+                  <FormControl variant="outlined" sx={{ m: 1, minWidth: 200 }}>
+                    <TextField
+                      value={dryWeight}
+                      onChange={dryWeightChange}
+                      label="Сухая масса тела"
+                      id="outlined-start-adornment"
+                      sx={{ width: '25ch' }}
+                      InputProps={{
+                        endAdornment: <InputAdornment position="end">кг</InputAdornment>,
+                      }}
+                    />
+                  </FormControl>
+
+                  <Divider />
+
+                  {/* Рост */}
+                  <FormControl variant="outlined" sx={{ m: 1, minWidth: 200 }}>
+                    <TextField
+                      value={height}
+                      onChange={heightChange}
+                      label="Рост"
+                      id="outlined-start-adornment"
+                      sx={{ width: '25ch' }}
+                      InputProps={{
+                        endAdornment: <InputAdornment position="end">м</InputAdornment>,
+                      }}
+                    />
+                  </FormControl>
+
+                  {/* Возраст */}
+                  <FormControl variant="outlined" sx={{ m: 1, minWidth: 200 }}>
+                    <TextField
+                      value={age}
+                      onChange={ageChange}
+                      label="Возраст"
+                      id="outlined-start-adornment"
+                      sx={{ width: '25ch' }}
+                      InputProps={{
+                        endAdornment: <InputAdornment position="end">лет</InputAdornment>,
+                      }}
+                    />
+                  </FormControl>
+
+                  {/* Пол */}
+                  <FormControl variant="outlined" sx={{ m: 1, minWidth: 200 }}>
+                    <InputLabel id="demo-simple-select-label">Пол</InputLabel>
+                    <Select
+                      value={gender}
+                      onChange={genderChange}
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      label="Gender"
+                      sx={{ width: '25ch' }}
+                    >
+                      <MenuItem value={1}>Мужской</MenuItem>
+                      <MenuItem value={0}>Женский</MenuItem>
+                    </Select>
+                  </FormControl>
+
+                </AccordionDetails>
+              </Accordion>
+
               {/* Определение метаболизма покоя */}
               <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
                 <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
                   <Typography>Определение метаболизма покоя</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <Typography>
+                  <Typography sx={{ mb: 1 }}>
                     Сперва определи примерный уровень сухой массы тела.
                     Это можно определить по замерам тела с неплохой точнотью при помощи <a href='https://www.bizcalcs.com/body-fat-navy/' rel='noopener, noreferrer'>US Navy Formyla</a>. Формула работает достаточно точно для людей с отсутсвующим либо совсем небольшим (1-6 месяцев) тренировочным опытом, у кого % жира и мышц находятся в стандартных переделах.
                     В случае более высокого опыта, объемы тела могут увеличиваться за счет мышц, а это искажает результаты формулы. Если вы занимаетесь более 6 месяцев, используйте результаты биоимпеданса для определения количества сухой массы тела и % подкожного жира.
                   </Typography>
+                  <Typography>
+                    Каннингем - универсальная формула для большинства.
+                  </Typography>
+                  <Typography>
+                    Тен Хааф - на случай, если нет совсем никакого способа определения процента жира.
+                  </Typography>
+                  <Typography>
+                    Тинсли - только для очень сухих (меньше 10% жира для мужчин и 15% для женщин.)
+                  </Typography>
+                  <Divider sx={{ mt: 1 }} />
+
+                  {/* Формула */}
+                  <FormControl variant="outlined" sx={{ mt: 2, minWidth: 200 }}>
+                    <InputLabel id="demo-simple-select-label">Формула</InputLabel>
+                    <Select
+                      value={formula}
+                      onChange={formulaChange}
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      label="Formula"
+                      sx={{ width: '25ch' }}
+                    >
+                      <MenuItem value={1}>Каннингем</MenuItem>
+                      <MenuItem value={2}>Тен Хааф</MenuItem>
+                      <MenuItem value={3}>Тинсли</MenuItem>
+                    </Select>
+                  </FormControl>
+
+                  {formula == '1' ? <p>Метаболизм покоя: {metabolismKanningem}</p> : null}
+                  {formula == '2' ? <p>Метаболизм покоя: {metabolismTenHaaf}</p> : null}
+                  {formula == '3' ? <p>Метаболизм покоя: {metabolismTinsley}</p> : null}
+
                 </AccordionDetails>
               </Accordion>
 
@@ -149,6 +344,23 @@ function App() {
                   <Typography>
                     Полученные цифры отражают ваш метаболизм ПОКОЯ. Это состояние при котором вы лежите, не двигаетесь, не чешитесь, не едите и не пьете. Делаем поправку на активность. Теперь надо цифру метаболизма покоя умножить на один из коэффициентов.
                   </Typography>
+
+                  <FormControl variant="outlined" sx={{ mt: 2, minWidth: 300 }}>
+                    <InputLabel id="demo-simple-select-label">Уровень активности</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={lifestyle}
+                      label="Lifestyle"
+                      onChange={lifestyleChange}
+                    >
+                      <MenuItem value={0.5}>Сидячий образ жизни</MenuItem>
+                      <MenuItem value={0.6}>Низкая активность</MenuItem>
+                      <MenuItem value={0.7}>Активный образ жизни</MenuItem>
+                      <MenuItem value={0.8}>Очень активный образ жизни</MenuItem>
+                    </Select>
+                  </FormControl>
+
                 </AccordionDetails>
               </Accordion>
 

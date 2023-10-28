@@ -190,9 +190,9 @@ function App() {
   }, [])
 
   useEffect(() => {
-    setMetabolismKanningem(Math.round((370 + 21.6 * +dryWeight) * getActivityRatio(gender, lifestyle) * +tef) + '')
-    setMetabolismTenHaaf(Math.round(((49.94 * +totalWeight + 2459.053 * +height - 34.014 * +age + 799.257 * +gender + 122.502) / 4.184) * getActivityRatio(gender, lifestyle) * +tef) + '')
-    setMetabolismTinsley(Math.round((24.8 * +totalWeight + 10) * getActivityRatio(gender, lifestyle) * +tef) + '')
+    setMetabolismKanningem(Math.round(370 + 21.6 * +dryWeight) + '')
+    setMetabolismTenHaaf(Math.round((49.94 * +totalWeight + 2459.053 * +height - 34.014 * +age + 799.257 * +gender + 122.502) / 4.184) + '')
+    setMetabolismTinsley(Math.round(24.8 * +totalWeight + 10) + '')
     setExpenses(Math.round(0.1 * +totalWeight * (+sets * 2.5)) + '')
   }, [dryWeight, totalWeight, height, age, gender, lifestyle, tef, sets])
 
@@ -227,9 +227,17 @@ function App() {
             {formula == '2' ? <p>Метаболизм покоя: {metabolismTenHaaf}</p> : null}
             {formula == '3' ? <p>Метаболизм покоя: {metabolismTinsley}</p> : null}
 
-            {formula == '1' ? <p>Метаболизм с учётом тренировки: {+metabolismKanningem - +expenses}</p> : null}
-            {formula == '2' ? <p>Метаболизм с учётом тренировки: {+metabolismTenHaaf - +expenses}</p> : null}
-            {formula == '3' ? <p>Метаболизм с учётом тренировки: {+metabolismTinsley - +expenses}</p> : null}
+            {formula == '1' ? <p>С учётом активности: {Math.round(+metabolismKanningem * getActivityRatio(gender, lifestyle))}</p> : null}
+            {formula == '2' ? <p>С учётом активности: {Math.round(+metabolismTenHaaf * getActivityRatio(gender, lifestyle))}</p> : null}
+            {formula == '3' ? <p>С учётом активности: {Math.round(+metabolismTinsley * getActivityRatio(gender, lifestyle))}</p> : null}
+
+            {formula == '1' ? <p>С учётом ТЭФ: {Math.round(+metabolismKanningem * getActivityRatio(gender, lifestyle) * +tef)}</p> : null}
+            {formula == '2' ? <p>С учётом ТЭФ: {Math.round(+metabolismTenHaaf * getActivityRatio(gender, lifestyle) * +tef)}</p> : null}
+            {formula == '3' ? <p>С учётом ТЭФ: {Math.round(+metabolismTinsley * getActivityRatio(gender, lifestyle) * +tef)}</p> : null}
+
+            {formula == '1' ? <p>С учётом тренировки: {Math.round(+metabolismKanningem * getActivityRatio(gender, lifestyle) * +tef - +expenses)}</p> : null}
+            {formula == '2' ? <p>С учётом тренировки: {Math.round(+metabolismTenHaaf * getActivityRatio(gender, lifestyle) * +tef - +expenses)}</p> : null}
+            {formula == '3' ? <p>С учётом тренировки: {Math.round(+metabolismTinsley * getActivityRatio(gender, lifestyle) * +tef - +expenses)}</p> : null}
           </Box>
 
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -237,7 +245,7 @@ function App() {
             <div>
 
               {/* Мои параметры */}
-              <Accordion expanded={expanded === 'panel5'} onChange={handleChange('panel5')}>
+              {/* <Accordion expanded={expanded === 'panel5'} onChange={handleChange('panel5')}>
                 <AccordionSummary aria-controls="panel5d-content" id="panel5d-header">
                   <Typography>Мои параметры</Typography>
                 </AccordionSummary>
@@ -245,87 +253,87 @@ function App() {
                   <Typography sx={{ mb: 2 }}>
                     Сперва внеси свои параметры.
                     Если вы знаете сухую массу тела, тогда достаточно внести общую массу и сухую.
-                  </Typography>
+                  </Typography> */}
 
-                  {/* Общая масса тела */}
-                  <FormControl variant="outlined" sx={{ m: 1, minWidth: 200 }}>
-                    <TextField
-                      value={totalWeight}
-                      onChange={totalWeightChange}
-                      label="Общая масса тела"
-                      id="outlined-start-adornment"
-                      sx={{ width: '25ch' }}
-                      InputProps={{
-                        endAdornment: <InputAdornment position="end">кг</InputAdornment>,
-                      }}
-                    />
-                  </FormControl>
+              {/* Общая масса тела */}
+              <FormControl variant="outlined" sx={{ m: 1, minWidth: 200 }}>
+                <TextField
+                  value={totalWeight}
+                  onChange={totalWeightChange}
+                  label="Общая масса тела"
+                  id="outlined-start-adornment"
+                  sx={{ width: '25ch' }}
+                  InputProps={{
+                    endAdornment: <InputAdornment position="end">кг</InputAdornment>,
+                  }}
+                />
+              </FormControl>
 
-                  {/* Сухая масса тела */}
-                  <FormControl variant="outlined" sx={{ m: 1, minWidth: 200 }}>
-                    <TextField
-                      value={dryWeight}
-                      onChange={dryWeightChange}
-                      label="Сухая масса тела"
-                      id="outlined-start-adornment"
-                      sx={{ width: '25ch' }}
-                      InputProps={{
-                        endAdornment: <InputAdornment position="end">кг</InputAdornment>,
-                      }}
-                    />
-                  </FormControl>
+              {/* Сухая масса тела */}
+              <FormControl variant="outlined" sx={{ m: 1, minWidth: 200 }}>
+                <TextField
+                  value={dryWeight}
+                  onChange={dryWeightChange}
+                  label="Сухая масса тела"
+                  id="outlined-start-adornment"
+                  sx={{ width: '25ch' }}
+                  InputProps={{
+                    endAdornment: <InputAdornment position="end">кг</InputAdornment>,
+                  }}
+                />
+              </FormControl>
 
-                  <Divider />
+              {/* <Divider /> */}
 
-                  {/* Рост */}
-                  <FormControl variant="outlined" sx={{ m: 1, minWidth: 200 }}>
-                    <TextField
-                      value={height}
-                      onChange={heightChange}
-                      label="Рост"
-                      id="outlined-start-adornment"
-                      sx={{ width: '25ch' }}
-                      InputProps={{
-                        endAdornment: <InputAdornment position="end">м</InputAdornment>,
-                      }}
-                    />
-                  </FormControl>
+              {/* Рост */}
+              <FormControl variant="outlined" sx={{ m: 1, minWidth: 200 }}>
+                <TextField
+                  value={height}
+                  onChange={heightChange}
+                  label="Рост"
+                  id="outlined-start-adornment"
+                  sx={{ width: '25ch' }}
+                  InputProps={{
+                    endAdornment: <InputAdornment position="end">м</InputAdornment>,
+                  }}
+                />
+              </FormControl>
 
-                  {/* Возраст */}
-                  <FormControl variant="outlined" sx={{ m: 1, minWidth: 200 }}>
-                    <TextField
-                      value={age}
-                      onChange={ageChange}
-                      label="Возраст"
-                      id="outlined-start-adornment"
-                      sx={{ width: '25ch' }}
-                      InputProps={{
-                        endAdornment: <InputAdornment position="end">лет</InputAdornment>,
-                      }}
-                    />
-                  </FormControl>
+              {/* Возраст */}
+              <FormControl variant="outlined" sx={{ m: 1, minWidth: 200 }}>
+                <TextField
+                  value={age}
+                  onChange={ageChange}
+                  label="Возраст"
+                  id="outlined-start-adornment"
+                  sx={{ width: '25ch' }}
+                  InputProps={{
+                    endAdornment: <InputAdornment position="end">лет</InputAdornment>,
+                  }}
+                />
+              </FormControl>
 
-                  {/* Пол */}
-                  <FormControl variant="outlined" sx={{ m: 1, minWidth: 200 }}>
-                    <InputLabel id="demo-simple-select-label">Пол</InputLabel>
-                    <Select
-                      value={gender}
-                      onChange={genderChange}
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      label="Gender"
-                      sx={{ width: '25ch' }}
-                    >
-                      <MenuItem value={1}>Мужской</MenuItem>
-                      <MenuItem value={0}>Женский</MenuItem>
-                    </Select>
-                  </FormControl>
+              {/* Пол */}
+              <FormControl variant="outlined" sx={{ m: 1, minWidth: 200 }}>
+                <InputLabel id="demo-simple-select-label">Пол</InputLabel>
+                <Select
+                  value={gender}
+                  onChange={genderChange}
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="Gender"
+                  sx={{ width: '25ch' }}
+                >
+                  <MenuItem value={1}>Мужской</MenuItem>
+                  <MenuItem value={0}>Женский</MenuItem>
+                </Select>
+              </FormControl>
 
-                </AccordionDetails>
-              </Accordion>
+              {/* </AccordionDetails>
+              </Accordion> */}
 
               {/* Определение метаболизма покоя */}
-              <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
+              {/* <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
                 <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
                   <Typography>Определение метаболизма покоя</Typography>
                 </AccordionSummary>
@@ -343,112 +351,108 @@ function App() {
                   </Typography>
                   <Typography>
                     Тинсли - только для очень сухих (меньше 10% жира для мужчин и 15% для женщин.)
-                  </Typography>
-                  <Divider sx={{ mt: 1 }} />
+                  </Typography> */}
+              {/* <Divider sx={{ m: 1 }} /> */}
 
-                  {/* Формула */}
-                  <FormControl variant="outlined" sx={{ mt: 2, minWidth: 200 }}>
-                    <InputLabel id="demo-simple-select-label">Формула</InputLabel>
-                    <Select
-                      value={formula}
-                      onChange={formulaChange}
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      label="Formula"
-                      sx={{ width: '25ch' }}
-                    >
-                      <MenuItem value={1}>Каннингем</MenuItem>
-                      <MenuItem value={2}>Тен Хааф</MenuItem>
-                      <MenuItem value={3}>Тинсли</MenuItem>
-                    </Select>
-                  </FormControl>
+              {/* Формула */}
+              <FormControl variant="outlined" sx={{ mt: 2, minWidth: 200 }}>
+                <InputLabel id="demo-simple-select-label">Формула</InputLabel>
+                <Select
+                  value={formula}
+                  onChange={formulaChange}
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="Formula"
+                  sx={{ width: '25ch' }}
+                >
+                  <MenuItem value={1}>Каннингем</MenuItem>
+                  <MenuItem value={2}>Тен Хааф</MenuItem>
+                  <MenuItem value={3}>Тинсли</MenuItem>
+                </Select>
+              </FormControl>
 
-                  {/* {formula == '1' ? <p>Метаболизм покоя: {metabolismKanningem}</p> : null}
-                  {formula == '2' ? <p>Метаболизм покоя: {metabolismTenHaaf}</p> : null}
-                  {formula == '3' ? <p>Метаболизм покоя: {metabolismTinsley}</p> : null} */}
-
-                </AccordionDetails>
-              </Accordion>
-
+              {/* </AccordionDetails>
+              </Accordion> */}
+              <Divider sx={{ m: 1 }} />
               {/* Коэффициент уровня активности */}
-              <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
+              {/* <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
                 <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
                   <Typography>Коэффициент уровня активности</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                   <Typography>
                     Полученные цифры отражают ваш метаболизм ПОКОЯ. Это состояние при котором вы лежите, не двигаетесь, не чешитесь, не едите и не пьете. Делаем поправку на активность. Теперь надо цифру метаболизма покоя умножить на один из коэффициентов.
-                  </Typography>
+                  </Typography> */}
 
-                  <FormControl variant="outlined" sx={{ mt: 2, minWidth: 300 }}>
-                    <InputLabel id="demo-simple-select-label">Уровень активности</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={lifestyle}
-                      label="Lifestyle"
-                      onChange={lifestyleChange}
-                    >
-                      <MenuItem value={1}>Сидячий образ жизни</MenuItem>
-                      <MenuItem value={2}>Низкая активность</MenuItem>
-                      <MenuItem value={3}>Активный образ жизни</MenuItem>
-                      <MenuItem value={4}>Очень активный образ жизни</MenuItem>
-                    </Select>
-                  </FormControl>
+              <FormControl variant="outlined" sx={{ mt: 2, minWidth: 300 }}>
+                <InputLabel id="demo-simple-select-label">Уровень активности</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={lifestyle}
+                  label="Lifestyle"
+                  onChange={lifestyleChange}
+                >
+                  <MenuItem value={1}>Сидячий образ жизни</MenuItem>
+                  <MenuItem value={2}>Низкая активность</MenuItem>
+                  <MenuItem value={3}>Активный образ жизни</MenuItem>
+                  <MenuItem value={4}>Очень активный образ жизни</MenuItem>
+                </Select>
+              </FormControl>
 
-                </AccordionDetails>
-              </Accordion>
-
+              {/* </AccordionDetails>
+              </Accordion> */}
+              <Divider sx={{ m: 1 }} />
               {/* Термический эффект пищи */}
-              <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
+              {/* <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
                 <AccordionSummary aria-controls="panel3d-content" id="panel3d-header">
                   <Typography>Термический эффект пищи</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                   <Typography>
                     ТЭП важный коэффициент, который не учитиывают большинство формул и подсчетов. Это энергия, которая уходит на то, чтобы переварить и усвоить еду, которую мы потребляем. Так как высокий % жира связан с низкой эффективностью пищеварения, почти вся полученная энергия из еды будет усвоена. Поэтому нужно снова учесть коэффициенты.
-                  </Typography>
+                  </Typography> */}
 
-                  <FormControl variant="outlined" sx={{ mt: 2, minWidth: 300 }}>
-                    <InputLabel id="demo-simple-select-label">Процент жира в организме</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={tef}
-                      label="tef"
-                      onChange={tefChange}
-                    >
-                      <MenuItem value={1.25}>{gender == '1' ? '5-15' : '12-20'}</MenuItem>
-                      <MenuItem value={1.19}>{gender == '1' ? '15-23' : '20-25'}</MenuItem>
-                      <MenuItem value={1.1}>{gender == '1' ? '23-27' : '25-30'} и более</MenuItem>
-                    </Select>
-                  </FormControl>
+              <FormControl variant="outlined" sx={{ mt: 2, minWidth: 300 }}>
+                <InputLabel id="demo-simple-select-label">Процент жира в организме</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={tef}
+                  label="tef"
+                  onChange={tefChange}
+                >
+                  <MenuItem value={1.25}>{gender == '1' ? '5-15' : '12-20'}</MenuItem>
+                  <MenuItem value={1.19}>{gender == '1' ? '15-23' : '20-25'}</MenuItem>
+                  <MenuItem value={1.1}>{gender == '1' ? '23-27' : '25-30'} и более</MenuItem>
+                </Select>
+              </FormControl>
 
-                </AccordionDetails>
-              </Accordion>
-
+              {/* </AccordionDetails>
+              </Accordion> */}
+              <Divider sx={{ m: 1 }} />
               {/* Cиловые тренировки */}
-              <Accordion expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
+              {/* <Accordion expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
                 <AccordionSummary aria-controls="panel4d-content" id="panel4d-header">
                   <Typography>Cиловые тренировки</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                   <Typography>
                     Силовые тренировки сложны в подсчетах, так как они неравномерны по нагрузке и времени. Сперва мы делаем упражнение 30-50 секунд, а затем отдыхаем, часто не производя никакой активности. Усталость, которая возникает вследствие силовой тренировки создает ощущение сильных энергопотерь, но как правило силовая тренировка отнимает от 300 до 500 калорий и не более. По разным исследованиям складывается картина, что во время силовой тренировки тратится 6-7 Кк в минуту. Чтобы индивидуализировать подсчет мы сделаем поправку на вес и возьмем коэффициент 0.1 Кк/1кг/1мин.
-                  </Typography>
+                  </Typography> */}
 
-                  <FormControl variant="outlined" sx={{ m: 1, minWidth: 200 }}>
-                    <TextField
-                      value={sets}
-                      onChange={setsChange}
-                      label="Кол-во подходов за тренировку"
-                      id="outlined-start-adornment"
-                      sx={{ width: '25ch' }}
-                    />
-                  </FormControl>
+              <FormControl variant="outlined" sx={{ m: 1, minWidth: 200 }}>
+                <TextField
+                  value={sets}
+                  onChange={setsChange}
+                  label="Кол-во подходов за тренировку"
+                  id="outlined-start-adornment"
+                  sx={{ width: '25ch' }}
+                />
+              </FormControl>
 
-                </AccordionDetails>
-              </Accordion>
+              {/* </AccordionDetails>
+              </Accordion> */}
 
             </div>
 

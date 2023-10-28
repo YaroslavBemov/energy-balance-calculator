@@ -17,6 +17,8 @@ import MuiAccordionDetails from '@mui/material/AccordionDetails'
 import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
+import { gender } from './types'
+import { getActivityRatio } from './helpers'
 
 // import './app.css'
 
@@ -62,13 +64,15 @@ function App() {
   const [dryWeight, setDryWeight] = useState<string>('1')
   const [height, setHeight] = useState<string>('1')
   const [age, setAge] = useState<string>('1')
-  const [gender, setGender] = useState<string>('0') // 0 - мужской
+  const [gender, setGender] = useState<gender>('1') // 1 - мужской
   const [lifestyle, setLifestyle] = useState<string>('1')
+  const [tef, setTef] = useState<string>('1.25')
   const [metabolismKanningem, setMetabolismKanningem] = useState<string>('0')
   const [metabolismTenHaaf, setMetabolismTenHaaf] = useState<string>('0')
   const [metabolismTinsley, setMetabolismTinsley] = useState<string>('0')
-  // const [sets, setSets] = useState<string>('1')
+  const [sets, setSets] = useState<string>('1')
   const [formula, setFormula] = useState<string>('1')
+  const [expenses, setExpenses] = useState<string>('400')
 
   const totalWeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const totalWeight = event.target.value
@@ -96,7 +100,9 @@ function App() {
 
   const genderChange = (event: SelectChangeEvent) => {
     const gender = event.target.value
-    setGender(gender)
+    if (gender == '1' || gender == '0') {
+      setGender(gender)
+    }
     localStorage.setItem('gender', gender)
   }
 
@@ -106,10 +112,22 @@ function App() {
     localStorage.setItem('lifestyle', lifestyle)
   }
 
+  const tefChange = (event: SelectChangeEvent) => {
+    const tef = event.target.value
+    setTef(tef)
+    localStorage.setItem('tef', tef)
+  }
+
   const formulaChange = (event: SelectChangeEvent) => {
     const formula = event.target.value
     setFormula(formula)
     localStorage.setItem('formula', formula)
+  }
+
+  const setsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const sets = event.target.value
+    setSets(sets)
+    localStorage.setItem('sets', sets)
   }
 
   const [mode, setMode] = useState<'light' | 'dark'>('dark')
@@ -150,24 +168,33 @@ function App() {
       setAge(age)
     }
     const gender = localStorage.getItem('gender')
-    if (gender) {
+    if (gender == '1' || gender == '0') {
       setGender(gender)
     }
     const lifestyle = localStorage.getItem('lifestyle')
     if (lifestyle) {
       setLifestyle(lifestyle)
     }
+    const tef = localStorage.getItem('tef')
+    if (tef) {
+      setTef(tef)
+    }
     const formula = localStorage.getItem('formula')
     if (formula) {
       setFormula(formula)
     }
+    const sets = localStorage.getItem('sets')
+    if (sets) {
+      setSets(sets)
+    }
   }, [])
 
   useEffect(() => {
-    setMetabolismKanningem((370 + 21.6 * +dryWeight).toFixed(1) + '')
-    setMetabolismTenHaaf(((49.94 * +totalWeight + 2459.053 * +height - 34.014 * +age + 799.257 * +gender + 122.502) / 4.184).toFixed(1) + '')
-    setMetabolismTinsley((24.8 * +totalWeight + 10).toFixed(1) + '')
-  }, [dryWeight, totalWeight, height, age, gender])
+    setMetabolismKanningem(Math.round((370 + 21.6 * +dryWeight) * getActivityRatio(gender, lifestyle) * +tef) + '')
+    setMetabolismTenHaaf(Math.round(((49.94 * +totalWeight + 2459.053 * +height - 34.014 * +age + 799.257 * +gender + 122.502) / 4.184) * getActivityRatio(gender, lifestyle) * +tef) + '')
+    setMetabolismTinsley(Math.round((24.8 * +totalWeight + 10) * getActivityRatio(gender, lifestyle) * +tef) + '')
+    setExpenses(Math.round(0.1 * +totalWeight * (+sets * 2.5)) + '')
+  }, [dryWeight, totalWeight, height, age, gender, lifestyle, tef, sets])
 
   const [expanded, setExpanded] = useState<string | false>('panel2')
 
@@ -195,6 +222,14 @@ function App() {
 
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <h1>TERENTEV<span style={{ color: 'yellow' }}>FIT</span></h1>
+
+            {formula == '1' ? <p>Метаболизм покоя: {metabolismKanningem}</p> : null}
+            {formula == '2' ? <p>Метаболизм покоя: {metabolismTenHaaf}</p> : null}
+            {formula == '3' ? <p>Метаболизм покоя: {metabolismTinsley}</p> : null}
+
+            {formula == '1' ? <p>Метаболизм с учётом тренировки: {+metabolismKanningem - +expenses}</p> : null}
+            {formula == '2' ? <p>Метаболизм с учётом тренировки: {+metabolismTenHaaf - +expenses}</p> : null}
+            {formula == '3' ? <p>Метаболизм с учётом тренировки: {+metabolismTinsley - +expenses}</p> : null}
           </Box>
 
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -328,9 +363,9 @@ function App() {
                     </Select>
                   </FormControl>
 
-                  {formula == '1' ? <p>Метаболизм покоя: {metabolismKanningem}</p> : null}
+                  {/* {formula == '1' ? <p>Метаболизм покоя: {metabolismKanningem}</p> : null}
                   {formula == '2' ? <p>Метаболизм покоя: {metabolismTenHaaf}</p> : null}
-                  {formula == '3' ? <p>Метаболизм покоя: {metabolismTinsley}</p> : null}
+                  {formula == '3' ? <p>Метаболизм покоя: {metabolismTinsley}</p> : null} */}
 
                 </AccordionDetails>
               </Accordion>
@@ -354,10 +389,10 @@ function App() {
                       label="Lifestyle"
                       onChange={lifestyleChange}
                     >
-                      <MenuItem value={0.5}>Сидячий образ жизни</MenuItem>
-                      <MenuItem value={0.6}>Низкая активность</MenuItem>
-                      <MenuItem value={0.7}>Активный образ жизни</MenuItem>
-                      <MenuItem value={0.8}>Очень активный образ жизни</MenuItem>
+                      <MenuItem value={1}>Сидячий образ жизни</MenuItem>
+                      <MenuItem value={2}>Низкая активность</MenuItem>
+                      <MenuItem value={3}>Активный образ жизни</MenuItem>
+                      <MenuItem value={4}>Очень активный образ жизни</MenuItem>
                     </Select>
                   </FormControl>
 
@@ -373,6 +408,22 @@ function App() {
                   <Typography>
                     ТЭП важный коэффициент, который не учитиывают большинство формул и подсчетов. Это энергия, которая уходит на то, чтобы переварить и усвоить еду, которую мы потребляем. Так как высокий % жира связан с низкой эффективностью пищеварения, почти вся полученная энергия из еды будет усвоена. Поэтому нужно снова учесть коэффициенты.
                   </Typography>
+
+                  <FormControl variant="outlined" sx={{ mt: 2, minWidth: 300 }}>
+                    <InputLabel id="demo-simple-select-label">Процент жира в организме</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={tef}
+                      label="tef"
+                      onChange={tefChange}
+                    >
+                      <MenuItem value={1.25}>{gender == '1' ? '5-15' : '12-20'}</MenuItem>
+                      <MenuItem value={1.19}>{gender == '1' ? '15-23' : '20-25'}</MenuItem>
+                      <MenuItem value={1.1}>{gender == '1' ? '23-27' : '25-30'} и более</MenuItem>
+                    </Select>
+                  </FormControl>
+
                 </AccordionDetails>
               </Accordion>
 
@@ -383,8 +434,19 @@ function App() {
                 </AccordionSummary>
                 <AccordionDetails>
                   <Typography>
-                    Силовые тренировки сложны в подсчетах, так как они неравномерны по нагрузке и времени. Сперва мы делаем упражнение 30-50 секунд, а затем отдыхаем, часто не проихводя никакой активности. Усталость, которая возникает вследствие силовой тренировки создает ощущение сильных энергопотерь, но как правило силовая тренировка отнимает от 300 до 500 калорий и не более. По разным исследованиям складывается картина, что во время силовой тренировки тратится 6-7 Кк в минуту. Чтобы индивидуальизировать подсчет мы сделаем поправку на вес и возьмем коэффициент 0.1 Кк/1кг/1мин.
+                    Силовые тренировки сложны в подсчетах, так как они неравномерны по нагрузке и времени. Сперва мы делаем упражнение 30-50 секунд, а затем отдыхаем, часто не производя никакой активности. Усталость, которая возникает вследствие силовой тренировки создает ощущение сильных энергопотерь, но как правило силовая тренировка отнимает от 300 до 500 калорий и не более. По разным исследованиям складывается картина, что во время силовой тренировки тратится 6-7 Кк в минуту. Чтобы индивидуализировать подсчет мы сделаем поправку на вес и возьмем коэффициент 0.1 Кк/1кг/1мин.
                   </Typography>
+
+                  <FormControl variant="outlined" sx={{ m: 1, minWidth: 200 }}>
+                    <TextField
+                      value={sets}
+                      onChange={setsChange}
+                      label="Кол-во подходов за тренировку"
+                      id="outlined-start-adornment"
+                      sx={{ width: '25ch' }}
+                    />
+                  </FormControl>
+
                 </AccordionDetails>
               </Accordion>
 

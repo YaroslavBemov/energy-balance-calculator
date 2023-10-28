@@ -7,14 +7,14 @@ import Box from '@mui/material/Box'
 import { ColorModeContext, ThemeButton } from './ThemeButton'
 import HelpModal from './HelpModal'
 
-import { styled } from '@mui/material/styles'
-import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp'
-import MuiAccordion, { AccordionProps } from '@mui/material/Accordion'
-import MuiAccordionSummary, {
-  AccordionSummaryProps,
-} from '@mui/material/AccordionSummary'
-import MuiAccordionDetails from '@mui/material/AccordionDetails'
-import Typography from '@mui/material/Typography'
+// import { styled } from '@mui/material/styles'
+// import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp'
+// import MuiAccordion, { AccordionProps } from '@mui/material/Accordion'
+// import MuiAccordionSummary, {
+//   AccordionSummaryProps,
+// } from '@mui/material/AccordionSummary'
+// import MuiAccordionDetails from '@mui/material/AccordionDetails'
+// import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
 import { gender } from './types'
@@ -22,41 +22,41 @@ import { getActivityRatio } from './helpers'
 
 // import './app.css'
 
-const Accordion = styled((props: AccordionProps) => (
-  <MuiAccordion disableGutters elevation={0} square {...props} />
-))(({ theme }) => ({
-  border: `1px solid ${theme.palette.divider}`,
-  '&:not(:last-child)': {
-    borderBottom: 0,
-  },
-  '&:before': {
-    display: 'none',
-  },
-}))
+// const Accordion = styled((props: AccordionProps) => (
+//   <MuiAccordion disableGutters elevation={0} square {...props} />
+// ))(({ theme }) => ({
+//   border: `1px solid ${theme.palette.divider}`,
+//   '&:not(:last-child)': {
+//     borderBottom: 0,
+//   },
+//   '&:before': {
+//     display: 'none',
+//   },
+// }))
 
-const AccordionSummary = styled((props: AccordionSummaryProps) => (
-  <MuiAccordionSummary
-    expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: '0.9rem' }} />}
-    {...props}
-  />
-))(({ theme }) => ({
-  backgroundColor:
-    theme.palette.mode === 'dark'
-      ? 'rgba(255, 255, 255, .05)'
-      : 'rgba(0, 0, 0, .03)',
-  flexDirection: 'row-reverse',
-  '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
-    transform: 'rotate(90deg)',
-  },
-  '& .MuiAccordionSummary-content': {
-    marginLeft: theme.spacing(1),
-  },
-}))
+// const AccordionSummary = styled((props: AccordionSummaryProps) => (
+//   <MuiAccordionSummary
+//     expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: '0.9rem' }} />}
+//     {...props}
+//   />
+// ))(({ theme }) => ({
+//   backgroundColor:
+//     theme.palette.mode === 'dark'
+//       ? 'rgba(255, 255, 255, .05)'
+//       : 'rgba(0, 0, 0, .03)',
+//   flexDirection: 'row-reverse',
+//   '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
+//     transform: 'rotate(90deg)',
+//   },
+//   '& .MuiAccordionSummary-content': {
+//     marginLeft: theme.spacing(1),
+//   },
+// }))
 
-const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
-  padding: theme.spacing(2),
-  borderTop: '1px solid rgba(0, 0, 0, .125)',
-}))
+// const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
+//   padding: theme.spacing(2),
+//   borderTop: '1px solid rgba(0, 0, 0, .125)',
+// }))
 
 
 function App() {
@@ -196,14 +196,14 @@ function App() {
     setExpenses(Math.round(0.1 * +totalWeight * (+sets * 2.5)) + '')
   }, [dryWeight, totalWeight, height, age, gender, lifestyle, tef, sets])
 
-  const [expanded, setExpanded] = useState<string | false>('panel2')
+  // const [expanded, setExpanded] = useState<string | false>('panel2')
 
-  const handleChange =
-    (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
-      setExpanded(newExpanded ? panel : false)
-      console.log(event.target)
+  // const handleChange =
+  //   (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
+  //     setExpanded(newExpanded ? panel : false)
+  //     console.log(event.target)
 
-    }
+  //   }
 
 
   return (

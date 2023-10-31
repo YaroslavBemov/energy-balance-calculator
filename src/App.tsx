@@ -32,25 +32,29 @@ function App() {
   const [expenses, setExpenses] = useState<string>('400')
 
   const totalWeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const totalWeight = event.target.value
+    let totalWeight = event.target.value
+    totalWeight = totalWeight.replace(',', '.')
     setTotalWeight(totalWeight)
     localStorage.setItem('totalWeight', totalWeight)
   }
 
   const dryWeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const dryWeight = event.target.value
+    let dryWeight = event.target.value
+    dryWeight = dryWeight.replace(',', '.')
     setDryWeight(dryWeight)
     localStorage.setItem('dryWeight', dryWeight)
   }
 
   const heightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const height = event.target.value
+    let height = event.target.value
+    height = height.replace(',', '.')
     setHeight(height)
     localStorage.setItem('height', height)
   }
 
   const ageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const age = event.target.value
+    let age = event.target.value
+    age = age.replace(',', '.')
     setAge(age)
     localStorage.setItem('age', age)
   }

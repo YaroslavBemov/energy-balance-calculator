@@ -186,7 +186,7 @@ function App() {
             {formula == '2' ? <p>С учётом ТЭФ: {Math.round(+metabolismTenHaaf * getActivityRatio(gender, lifestyle) * +tef)}</p> : null}
             {formula == '3' ? <p>С учётом ТЭФ: {Math.round(+metabolismTinsley * getActivityRatio(gender, lifestyle) * +tef)}</p> : null}
 
-            {formula == '1' ? <p>С учётом тренировки: {Math.round(+metabolismKanningem * getActivityRatio(gender, lifestyle) * +tef - +expenses)}</p> : null}
+            {formula == '1' ? <p>С учётом тренировки: {Math.round(+metabolismKanningem * getActivityRatio(gender, lifestyle) * +tef - +expenses - +metabolismKanningem / 24)}</p> : null}
             {formula == '2' ? <p>С учётом тренировки: {Math.round(+metabolismTenHaaf * getActivityRatio(gender, lifestyle) * +tef - +expenses)}</p> : null}
             {formula == '3' ? <p>С учётом тренировки: {Math.round(+metabolismTinsley * getActivityRatio(gender, lifestyle) * +tef - +expenses)}</p> : null}
           </Box>

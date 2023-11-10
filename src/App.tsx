@@ -17,17 +17,17 @@ import HelpModalTef from './HelpModalTef'
 
 
 function App() {
-  const [totalWeight, setTotalWeight] = useState<string>('1')
-  const [dryWeight, setDryWeight] = useState<string>('1')
-  const [height, setHeight] = useState<string>('1')
-  const [age, setAge] = useState<string>('1')
+  const [totalWeight, setTotalWeight] = useState<string>('80')
+  const [dryWeight, setDryWeight] = useState<string>('60')
+  const [height, setHeight] = useState<string>('180')
+  const [age, setAge] = useState<string>('40')
   const [gender, setGender] = useState<gender>('1') // 1 - мужской
   const [lifestyle, setLifestyle] = useState<string>('1')
   const [tef, setTef] = useState<string>('1.25')
   const [metabolismKanningem, setMetabolismKanningem] = useState<string>('0')
   const [metabolismTenHaaf, setMetabolismTenHaaf] = useState<string>('0')
   const [metabolismTinsley, setMetabolismTinsley] = useState<string>('0')
-  const [sets, setSets] = useState<string>('1')
+  const [sets, setSets] = useState<string>('15')
   const [formula, setFormula] = useState<string>('1')
   const [expenses, setExpenses] = useState<string>('400')
 
